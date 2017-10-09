@@ -12,61 +12,82 @@ registerBlockType( 'tainacan/collections-list', {
   attributes: {
     content: {
       type: 'array',
-      source: children( 'p' )
+      source: children('div', 'img')
     }
-},
+  },
+  edit: function( props ) {
 
-edit: function( props ) {
-
-  var response = {
-    label: '',
-    coverImageSource: '',
-    permalink: ''
-  };
-
-  jQuery.ajax({
-    url: gutenbergTainacanBlocks.ajaxurl,
-    type: 'POST',
-    dataType: 'json',
-    data: {
-      operation: 'get_collections_json',
+    var response = {
+      label: '',
+      coverImageSource: '',
+      permalink: ''
+    };
+  //236 17
+    jQuery.ajax({
+      url: gutenbergTainacanBlocks.ajaxurl,
+      type: 'POST',
+      dataType: 'json',
       data: {
-        collection_id: 1
-      }
-    },
-    async: false
-  }).done(function(res){
-    console.info(res)
-    prepareResponse(res);
+        action: 'get_collections',
+        collectionsID: [17]
+      },
+      async: false,
+      crossDomain: true,
+      cache: false,
+    }).done(function(res){
+      res = JSON.parse(res[0]);
+      console.info(res);
+      
+      prepareResponse(res);
 
-  }).fail(function(res) {
-    console.info(res);
-  });
+    }).fail(function(res) {
+      console.warn('FAIL! '+ res);
+    });
 
-  function prepareResponse(res){
-      response = {
-        label: res[0].label,
-        coverImageSource: '#',
-        permalink: res[0].permalink
-      };
-  }
+    function prepareResponse(res){
+        response = {
+          caption: res.collection.post_title,
+          coverImageSource: res.collection.thumbnail ? res.collection.thumbnail : '#',
+          permalink: res.collection.guid
+        };
+    }
 
-  console.info(response);
 
-  return [ 
-    el(
-      'div', 
-      { className: props.className + ' img-thumbnail' }, 
-      el('a', {href: response.permalink}, 
-        el('img', {src: response.coverImageSource, style: {maxWidth: '100%'}, className: 'img-responsive', alt: response.label})
+    var collectionsList = [
+      el('div', {className: 'container-fluid'}, 
+        el('div', {className: 'row block-center'},
+          el(
+            'div', { className: props.className + ' thumbnail col-xs-3' }, 
+            el('a', {href: response.permalink, target: '_blank'}, 
+              el('img', {src: response.coverImageSource, style: {width: '100%'}, className: 'img-responsive img-thumbnail', alt: response.caption}),
+              el('figcaption', {className: 'figure-caption text-center text-muted'}, response.caption)
+            )
+          ),
+          el(
+            'div', { className: props.className + ' thumbnail col-xs-3 col-xs-offset-1' }, 
+            el('a', {href: response.permalink, target: '_blank'}, 
+              el('img', {src: response.coverImageSource, style: {width: '100%'}, className: 'img-responsive img-thumbnail', alt: response.caption}),
+              el('figcaption', {className: 'figure-caption text-center text-muted'}, response.caption)
+            )
+          ),
+          el(
+            'div', { className: props.className + ' thumbnail col-xs-3 col-xs-offset-1' }, 
+            el('a', {href: response.permalink, target: '_blank'}, 
+              el('img', {src: response.coverImageSource, style: {width: '100%'}, className: 'img-responsive img-thumbnail', alt: response.caption}),
+              el('figcaption', {className: 'figure-caption text-center text-muted'}, response.caption)
+            )
+          )
       )
     )
-  ];
-},
+    ];
 
-save: function( props ) {
-  var content = props.attributes.content;
+    console.info(collectionsList);
+    return [collectionsList];
+  },
 
-  return el( 'div', { className: props.className }, content );
-},
-} );
+  save: function( props ) {
+    var content = props.attributes.content;
+    console.info(content);
+    return el('div', {className: props.className}, content + 'Hello!');
+  },
+});
