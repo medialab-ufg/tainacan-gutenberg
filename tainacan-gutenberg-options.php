@@ -41,13 +41,15 @@ class TAINACAN_GUTENBERG__OptionsPage{
   }
 
   function durlg_callback(){
+    $defaultURL = get_option('default_repository_url')['default-url-g'];
+    
     printf('<input type="url" id="default-url-g" name="default_repository_url[default-url-g]" value="%s" />',
-      isset( get_option('default_repository_url')['default-url-g'] ) ? get_option('default_repository_url')['default-url-g'] : ''
+      isset( $defaultURL ) ? $defaultURL : ''
     );
   }
 
   function printURLinfo(){
-    print('Digite abaixo a URL do Tainacan Repositório padrão, para busca de conteúdo: ');
+    print('Digite abaixo a URL do Tainacan Repositório padrão, para busca de conteúdo (por exemplo: http://www.example.com/ - não esqueça da / no fim): ');
   }
 
   function sanitize( $input ){
@@ -55,6 +57,8 @@ class TAINACAN_GUTENBERG__OptionsPage{
       if( isset( $input['default-url-g'] ) ){
           $new_input['default-url-g'] = sanitize_text_field( $input['default-url-g'] );
       }
+
+      
 
       return $new_input;
   }

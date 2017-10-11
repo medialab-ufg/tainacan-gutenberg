@@ -18,7 +18,7 @@ include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 require_once('tainacan-gutenberg-blocks.php');
 require_once('tainacan-gutenberg-options.php');
 
-$TG__blocks = new TAINACAN_GUTENBERG__Blocks('');
+$TG__blocks = new TAINACAN_GUTENBERG__Blocks();
 $TG__options = new TAINACAN_GUTENBERG__OptionsPage();
 
 ?>

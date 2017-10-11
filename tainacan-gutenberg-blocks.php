@@ -2,28 +2,16 @@
 
 class TAINACAN_GUTENBERG__Blocks{
   private $PLUGINS_URL = '';
-  private $TAINACAN_URL = '';
   
   const TAINACAN_API_URL = 'wp-json/tainacan/v1/';
 
-  function __construct($TAINACAN_URL = ''){
+  function __construct(){
     if(is_plugin_active('gutenberg/gutenberg.php')){
       require_once('tainacan-gutenberg-collection.php');
       
       $collection = new TAINACAN_GUTENBERG__Collection();
       
-
       $this->PLUGINS_URL = plugins_url();
-
-      if(!empty($TAINACAN_URL)){
-        $this->TAINACAN_URL = $TAINACAN_URL;
-      }
-      else{
-        global $options;
-        $defaultURL = get_option('default_repository_url')['default-url-g'];
-
-        $this->TAINACAN_URL = isset($defaultURL) ? $defaultURL : '';
-      }
 
       add_action( 'admin_enqueue_scripts', array(&$this, 'enqueue_tainacan_gutenberg_assets'));
       add_action( 'enqueue_block_assets', array(&$this, 'enqueue_blocks_js'));

@@ -1,19 +1,24 @@
 <?php
 
-class TAINACAN_GUTENBERG__Collection{
+class TAINACAN_GUTENBERG__Collection{  
   public function get_collections(){
-    $collections = $_POST['collectionsID'];
+    require_once('tainacan-gutenberg-api-const.php');
 
-    $URL = 'http://localhost/wordpress/' . TAINACAN_GUTENBERG__Blocks::TAINACAN_API_URL . 'collections/';
-    
-    $collectionsResponse = [];
-    foreach($collections as $index => $collection){
-      $body =  wp_remote_get($URL . $collection)['body'];
-      
-      array_push($collectionsResponse, $body);
+    $TG__APIConst = new TAINACAN_GUTENBERG__APIConst();
+
+    $collection = $_POST['collectionName'];
+    $sourceURL = $_POST['sourceURL'];
+
+    if(empty($sourceURL)){
+      $has = $TG__APIConst->hasDefaultTainacanURL();
+      $sourceURL = $has ? $has : 'http://localhost/';
     }
 
-    echo json_encode($collectionsResponse);
+    $URL = $sourceURL . TAINACAN_GUTENBERG__Blocks::TAINACAN_API_URL . 'collections/?filter[title]=';
+    
+    $response =  wp_remote_get($URL . $collection);
+    
+    echo json_encode($response['body']);
     die;
   }
 }
