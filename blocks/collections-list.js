@@ -6,13 +6,13 @@
   var contentTemp = [];
 
   function fetchCollection(collectionName = '', sourceURL = '') {
-    console.info(collectionName + ' ' + sourceURL);
+    console.info({__collectionName: collectionName, __sourceURL: sourceURL});
     jQuery.ajax({
       url: gutenbergTainacanBlocks.ajaxurl,
       type: 'POST',
       dataType: 'json',
       data: {
-        action: 'get_collections',
+        action: 'get_collection',
         collectionName: collectionName,
         sourceURL: sourceURL,
       },
@@ -20,7 +20,14 @@
       crossDomain: true,
     }).done(function (resp) {
       response = JSON.parse(resp);
-      console.info(response);
+      
+      if(response.data && response.data.status == '404'){
+        alert(response.message);
+        
+        response = '';
+        return;
+      }
+
     }).fail(function (xhr, status, error) {
       console.error(error);
     });
@@ -41,8 +48,16 @@
     var caption = collection[0].post_title;
 
     return el('div', { className: 'thumbnail col-xs-3 col-xs-offset-1' },
+             //el('button', {className: 'close'}, 
+               //el('span', null, '\u00D7'),
+              //),
               el('a', { href: permalink, target: '_blank' },
-                el('img', { src: coverImageSource, className: 'img-responsive img-thumbnail', style: {width: '100%'}, alt: caption }),
+                el('img', { 
+                  src: coverImageSource, 
+                  className: 'img-responsive img-thumbnail', 
+                  style: {width: '100%'}, 
+                  alt: caption 
+                }),
                 el('figcaption', { className: 'figure-caption text-center text-muted'}, caption )
               ),
             );
@@ -76,19 +91,17 @@
       var focus = props.focus;
       var formEdit = [];
 
-      function setCollection(event) {   
+      function setCollection(event) {
+        event.preventDefault();
+
         var collection = event.target[0].value;
         var srcURL = event.target[1].value;
-
-        console.info({__html: collection})
 
         if (collection) {
           contentTemp.push(TainacanCollection({ collectionName: collection, sourceURL: srcURL }));
          
           props.setAttributes({ content: contentTemp, collectionName: collection, sourceURL: srcURL });
         }
-
-        event.preventDefault();
       }
 
       formEdit.push(
@@ -101,24 +114,53 @@
           },
           'Add collection'),
         ),
-        el('div', {className: 'modal fade', id: 'tb-modal-add-collection', role: 'dialog'},
+        el('div', {
+          className: 'modal fade', 
+          id: 'tb-modal-add-collection', 
+          role: 'dialog'
+        },
           el('div', {className: 'modal-dialog modal-sm'}, 
             el('div', {className: 'modal-content'}, 
               el('div', {className: 'modal-header'},
-                el('button', {className: 'close', 'data-dismiss': 'modal'}, 'x'),
+                el('button', {
+                  className: 'close', 
+                  'data-dismiss': 'modal'
+                }, '\u00D7'),
                 el('h4', {className: 'modal-title'}, 'Add Collection')
               ),
               el('div', {className: 'modal-body'},
-                el('form', { className: '', onSubmit: setCollection, method: 'post', id: 'tb-form' },
+                el('form', { 
+                  className: '', 
+                  onSubmit: setCollection, 
+                  method: 'post', 
+                  id: 'tb-form' 
+                },
                   el('div', { className: 'form-group' },
-                    el('input', { className: 'form-control', id: 'tb-input-collection-name', type: 'text', required: true, placeholder: 'Collection name' }),
-                    el('input', { className: 'form-control', id: 'tb-input-collection-url', type: 'url', required: false, placeholder: 'Source URL' })
+                    el('input', { 
+                      className: 'form-control', 
+                      id: 'tb-input-collection-name', 
+                      type: 'text', required: true, 
+                      placeholder: 'Collection name' 
+                    }),
+                    el('input', { 
+                      className: 'form-control', 
+                      id: 'tb-input-collection-url', 
+                      type: 'url', required: false,
+                      placeholder: 'Source URL' 
+                    })
                   ),
-                  el('button', { className: 'btn btn-info btn-sm center-block btn-block', style: { height: '100%' }, type: 'submit' }, 'Add collection'),
+                  el('button', { 
+                    className: 'btn btn-info btn-sm center-block btn-block', 
+                    style: { height: '100%' }, 
+                    type: 'submit' 
+                  }, 'Add collection'),
                 ),
               ),
               el('div', {className: 'modal-footer'},
-                el('button', {className: 'btn  btn-default', 'data-dismiss': 'modal'}, 'Close')
+                el('button', {
+                  className: 'btn  btn-default', 
+                  'data-dismiss': 'modal'
+                }, 'Close')
               )
             )
           )

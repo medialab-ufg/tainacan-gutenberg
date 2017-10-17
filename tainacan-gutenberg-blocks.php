@@ -17,7 +17,7 @@ class TAINACAN_GUTENBERG__Blocks{
       add_action( 'enqueue_block_assets', array(&$this, 'enqueue_blocks_js'));
       add_action( 'enqueue_block_assets', array(&$this, 'enqueue_blocks_css'));
 
-      add_action( 'wp_ajax_get_collections', array($collection, 'get_collections'));
+      add_action( 'wp_ajax_get_collection', array($collection, 'get_collection'));
     }
     else{
       die('É necessário ter o plugin Gutenberg instalado e ativado');
@@ -29,7 +29,6 @@ class TAINACAN_GUTENBERG__Blocks{
     wp_enqueue_script('bootstrap-js', $this->PLUGINS_URL . '/tainacan-gutenberg/assets/js/bootstrap/bootstrap.min.js', 'jQuery', '3.3.7', true); 
 
     wp_enqueue_style( 'bootstrap-css', $this->PLUGINS_URL . '/tainacan-gutenberg/assets/css/bootstrap/bootstrap.min.css');
-
   }
 
   function enqueue_blocks_js() {    
@@ -37,7 +36,14 @@ class TAINACAN_GUTENBERG__Blocks{
     wp_enqueue_script(
       'collections-list',
       $this->PLUGINS_URL . '/tainacan-gutenberg/blocks/collections-list.js',
-      array( 'wp-blocks', 'wp-element' )
+      array('wp-blocks', 'wp-element')
+    );
+
+    // Adiciona script do bloco de grade de itens
+    wp_enqueue_script(
+      'items-grid',
+      $this->PLUGINS_URL . '/tainacan-gutenberg/blocks/items-grid.js',
+      array('wp-blocks', 'wp-element')
     );
 
     $this->localize_ajax();
@@ -48,7 +54,7 @@ class TAINACAN_GUTENBERG__Blocks{
     wp_enqueue_style(
       'tainacan-blocks',
       $this->PLUGINS_URL . '/tainacan-gutenberg/assets/css/tainacan-blocks.css',
-      array( 'wp-edit-blocks' )
+      array('wp-edit-blocks')
       //,filemtime($this->$PLUGINS_URL . '/tainacan-gutenberg/assets/css/tainacan-blocks.css')
     );
   }
