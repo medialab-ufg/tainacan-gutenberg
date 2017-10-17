@@ -1,8 +1,9 @@
 (function (blocks, element) {
   var el = element.createElement;
   var source = blocks.source;
+  var children = source.children;
   var response = '';
-  var content = [];
+  var contentTemp = [];
 
   function fetchCollection(collectionName = '', sourceURL = '') {
     console.info(collectionName + ' ' + sourceURL);
@@ -17,7 +18,6 @@
       },
       async: false,
       crossDomain: true,
-      cache: false,
     }).done(function (resp) {
       response = JSON.parse(resp);
       console.info(response);
@@ -34,7 +34,6 @@
     
     fetchCollection(collectionName, sourceURL);
     var collection = response;
-    //console.warn(collection);
     if(!collection) { return null; };
 
     var permalink = collection[0].guid;
@@ -57,71 +56,92 @@
     category: 'widgets',
 
     attributes: {
+      content: {
+        type: 'array',
+        source: children('html')
+      },
       collectionName: {
         type: 'string'
       },
       sourceURL: {
         type: 'string'
-      },
+      }
     },
 
+    keywords: ['tainacan', 'collections', 'collections-list'],
+
     edit: function (props) {
-      var collectionName = props.attributes.collectionName;
-      var sourceURL = props.attributes.sourceURL;
+      var content = props.attributes.content;
       var alignment = props.attributes.alignment;
       var focus = props.focus;
-      var children;
+      var formEdit = [];
 
       function setCollection(event) {   
-        event.preventDefault();
-        
         var collection = event.target[0].value;
-        var sourceURL = event.target[1].value;
+        var srcURL = event.target[1].value;
 
-        console.warn(collection);
-        console.warn(sourceURL);
+        console.info({__html: collection})
 
-        props.setAttributes({ collectionName: collection, sourceURL: sourceURL });
+        if (collection) {
+          contentTemp.push(TainacanCollection({ collectionName: collection, sourceURL: srcURL }));
+         
+          props.setAttributes({ content: contentTemp, collectionName: collection, sourceURL: srcURL });
+        }
+
+        event.preventDefault();
       }
 
-      children = [];
-      if (collectionName) {
-        content.push(TainacanCollection({ collectionName: collectionName, sourceURL: sourceURL }));
-      }
-
-      children.push(
-        el('div', {className: 'container-fluid '+ props.className},
-          el('div', {className: 'row'},
-            el('div', {className: 'col-xs-12'},
-              el(
-                'div', { className: ' thumbnail col-xs-12 col-xs-offset-0' },
+      formEdit.push(
+        el('div', { className: 'thumbnail col-xs-3 col-xs-offset-1' },
+          el('button', { 
+            className: 'btn btn-default btn-sm', 
+            style: { height: '140px', width: '100%' },
+            'data-toggle': 'modal',
+            'data-target': '#tb-modal-add-collection'
+          },
+          'Add collection'),
+        ),
+        el('div', {className: 'modal fade', id: 'tb-modal-add-collection', role: 'dialog'},
+          el('div', {className: 'modal-dialog modal-sm'}, 
+            el('div', {className: 'modal-content'}, 
+              el('div', {className: 'modal-header'},
+                el('button', {className: 'close', 'data-dismiss': 'modal'}, 'x'),
+                el('h4', {className: 'modal-title'}, 'Add Collection')
+              ),
+              el('div', {className: 'modal-body'},
                 el('form', { className: '', onSubmit: setCollection, method: 'post', id: 'tb-form' },
                   el('div', { className: 'form-group' },
                     el('input', { className: 'form-control', id: 'tb-input-collection-name', type: 'text', required: true, placeholder: 'Collection name' }),
                     el('input', { className: 'form-control', id: 'tb-input-collection-url', type: 'url', required: false, placeholder: 'Source URL' })
                   ),
-                  el('button', { className: 'btn btn-success btn-sm center-block btn-block', style: { height: '100%' }, type: 'submit' }, 'Add collection'),
+                  el('button', { className: 'btn btn-info btn-sm center-block btn-block', style: { height: '100%' }, type: 'submit' }, 'Add collection'),
                 ),
               ),
+              el('div', {className: 'modal-footer'},
+                el('button', {className: 'btn  btn-default', 'data-dismiss': 'modal'}, 'Close')
+              )
             )
           )
         )
       );
 
       return [
-        el('div', {className: 'container-fluid '},
-          el('div', {className: 'row'},
-            el('div', {className: 'col-xs-12'}, content)
+        el('html', null, 
+          el('div', {className: 'container-fluid '},
+            el('div', {className: 'row'},
+              el('div', {className: 'col-xs-12'},  [contentTemp , formEdit])
+            )
           )
-        ), children
+        )
       ];
     },
 
     save: function (props) {
-      return TainacanCollection({ collectionName: props.attributes.collectionName, sourceURL: props.attributes.sourceURL });
+      var content = props.attributes.content;
+      return content;
     }
   });
 })(
   window.wp.blocks,
   window.wp.element
-  );
+);
