@@ -13,11 +13,13 @@ class TAINACAN_GUTENBERG__Blocks{
       
       $this->PLUGINS_URL = plugins_url();
 
-      add_action( 'admin_enqueue_scripts', array(&$this, 'enqueue_tainacan_gutenberg_assets'));
-      add_action( 'enqueue_block_assets', array(&$this, 'enqueue_blocks_js'));
-      add_action( 'enqueue_block_assets', array(&$this, 'enqueue_blocks_css'));
+      add_action('admin_enqueue_scripts', array(&$this, 'enqueue_tainacan_gutenberg_assets'));
+      add_action('enqueue_block_assets', array(&$this, 'enqueue_blocks_js'));
+      add_action('enqueue_block_assets', array(&$this, 'enqueue_blocks_css'));
 
-      add_action( 'wp_ajax_get_collection', array($collection, 'get_collection'));
+      add_action('wp_ajax_get_collection', array($collection, 'get_collection'));
+      add_action('wp_ajax_get_collections', array($collection, 'get_collections'));
+      add_action('wp_ajax_get_collection_items', array($collection, 'get_collection_items'));
     }
     else{
       die('É necessário ter o plugin Gutenberg instalado e ativado');
@@ -28,7 +30,8 @@ class TAINACAN_GUTENBERG__Blocks{
     wp_enqueue_script('jQuery', $this->PLUGINS_URL . '/tainacan-gutenberg/assets/js/jquery/jquery-3.2.1.min.js', null, '3.2.1', true);        
     wp_enqueue_script('bootstrap-js', $this->PLUGINS_URL . '/tainacan-gutenberg/assets/js/bootstrap/bootstrap.min.js', 'jQuery', '3.3.7', true); 
 
-    wp_enqueue_style( 'bootstrap-css', $this->PLUGINS_URL . '/tainacan-gutenberg/assets/css/bootstrap/bootstrap.min.css');
+    wp_enqueue_style('bootstrap-css', $this->PLUGINS_URL . '/tainacan-gutenberg/assets/css/bootstrap/bootstrap.min.css');
+    wp_enqueue_style('font-awesome-css', $this->PLUGINS_URL . '/tainacan-gutenberg/assets/css/fontawesome/font-awesome.min.css');
   }
 
   function enqueue_blocks_js() {    
