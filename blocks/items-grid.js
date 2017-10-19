@@ -46,7 +46,6 @@
 
             for(var i = 0, len = collections.length; i < len; i++){
                 optionsCollections.push(el('option', null, collections[i].post_title));
-                console.log(collections[i].post_title);
             }
             showRefreshAnimation(false);
         }).always(function(){
@@ -59,7 +58,6 @@
     function showItemOption(event){
         event.preventDefault();
 
-        console.info(event.target.value);
         var collectionSelected = event.target.value;
         var collectionID = '';
 
@@ -83,12 +81,10 @@
             async: false,
         }).done(function(resp){
             items = JSON.parse(resp);
-            console.info(items);
             optionsItems = [];
 
             for(var i = 0, len = items.items.length; i < len; i++){
                 optionsItems.push(el('option', null, items.items[i].item.post_title));
-                console.log(items.items[i].item.post_title);
             }
             showRefreshAnimation(false);
         }).always(function(){
@@ -136,17 +132,18 @@
         attributes: {
             content: {
                 type: 'array',
-                source: children('html')
+                source: children('div')
             },
             item: {
                 type: 'object',
             }
         },
 
-        keywords: ['tainacan', 'collections', 'collections-list'],
+        keywords: ['tainacan', 'item', 'item-list'],
 
         edit: function (props) {
             var content = props.attributes.content;
+            var itemA = props.attributes.item;
             var alignment = props.attributes.alignment;
             var focus = props.focus;
             var formEdit = [];
@@ -163,6 +160,10 @@
                     }
                 }
 
+                if(content){
+                    contentTemp = content;
+                }
+
                 showRefreshAnimation(true);
                 contentTemp.push(TainacanItem(item));
                 showRefreshAnimation(false);
@@ -171,6 +172,7 @@
             }
 
             formEdit.push(
+                content,
                 el('div', { className: 'thumbnail col-xs-5 col-xs-offset-1' },
                     el('button', {
                         className: 'btn btn-default btn-sm',
@@ -263,7 +265,7 @@
                 el('html', null,
                     el('div', { className: 'container-fluid ' + props.className },
                         el('div', { className: 'row' },
-                            el('div', { className: 'col-xs-12' }, [contentTemp, formEdit])
+                            el('div', { className: 'col-xs-12' }, formEdit)
                         )
                     )
                 )

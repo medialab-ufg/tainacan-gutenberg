@@ -19,8 +19,7 @@
   }
 
   function fetchCollection(collectionName = '', sourceURL = '') {
-    console.info({ __collectionName: collectionName, __sourceURL: sourceURL });
-
+    
     showRefreshAnimation(true);
     jQuery.ajax({
       url: gutenbergTainacanBlocks.ajaxurl,
@@ -95,15 +94,15 @@
     category: 'widgets',
 
     attributes: {
-      content: {
-        type: 'array',
-        source: children('html')
-      },
       collectionName: {
         type: 'string'
       },
       sourceURL: {
         type: 'string'
+      },
+      content: {
+        type: 'array',
+        source: children('div')
       }
     },
 
@@ -113,7 +112,7 @@
       var content = props.attributes.content;
       var alignment = props.attributes.alignment;
       var focus = props.focus;
-      var formEdit = [];
+      var formEdit;
 
       function setCollection(event) {
         event.preventDefault();
@@ -121,16 +120,20 @@
         var collection = event.target[0].value;
         var srcURL = event.target[1].value;
 
-        console.info({ __collection: collection, __srcURL: srcURL });
+        if(content){
+          contentTemp = content;
+        }
 
         if (collection) {
           contentTemp.push(TainacanCollection({ collectionName: collection, sourceURL: srcURL }));
-
-          props.setAttributes({ content: contentTemp, collectionName: collection, sourceURL: srcURL });
+          
+          props.setAttributes({ collectionName: collection, sourceURL: srcURL, content: contentTemp});
         }
       }
 
+      formEdit = [];
       formEdit.push(
+        content,
         el('div', { className: 'thumbnail col-xs-3 col-xs-offset-1' },
           el('button', {
             className: 'btn btn-default btn-sm',
@@ -212,7 +215,7 @@
         el('html', null,
           el('div', { className: 'container-fluid ' },
             el('div', { className: 'row' },
-              el('div', { className: 'col-xs-12' }, [contentTemp, formEdit])
+              el('div', { className: 'col-xs-12' }, formEdit),
             )
           )
         )
