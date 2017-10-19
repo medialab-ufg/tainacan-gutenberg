@@ -95,7 +95,10 @@
     function TainacanItem(item){
         return el('div', {className: 'col-xs-5 thumbnail col-xs-offset-1'},
             el('div', {className: 'col-xs-4'},
-                el('a', {href: item.guid}, 
+                el('a', {
+                    href: item.guid, 
+                    target: '_blank'
+                }, 
                     el('img', {
                         className: 'img-thumbnail', 
                         src: item.thumbnail,
@@ -105,9 +108,21 @@
             ),
             el('div', {className: 'col-xs-8'},
                 el('dl', {},
-                    el('dt',  {className: 'text-justify text-muted', style: {'font-size': '85%'}}, item.post_title),
+                    el('dt',  {
+                        className: '', 
+                        style: {'font-size': '85%'}
+                    }, 
+                    el('a', {
+                        className: 'text-muted',
+                        href: item.guid, 
+                        target: '_blank'
+                    }, item.post_title),
+                    ),
                     el('dd', null, 
-                        el('details', {className: 'text-muted text-justify', style: {'font-size': '85%'}}, 
+                        el('details', {
+                            className: 'text-muted text-justify', 
+                            style: {'font-size': '85%'}
+                        }, 
                             el('small', null, item.post_content),
                         ),
                     ),
@@ -221,7 +236,10 @@
                                             placeholder: 'Repository URL',
                                             onKeyPress: verifyKey,
                                             onLoad: showCollectionOption,
-                                        })
+                                            'data-toggle': 'tooltip',
+                                            'data-placement': 'top',
+                                            'title': 'After insert URL, press enter!',
+                                        }),
                                     ),
                                     el('div', { className: 'form-group' },
                                         el('label', {className: ''}, 'Select collection:'),

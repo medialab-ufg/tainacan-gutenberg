@@ -1,6 +1,7 @@
 (function (blocks, element) {
   var el = element.createElement;
   var source = blocks.source;
+  var InspectorControls = blocks.InspectorControls;
   var children = source.children;
   var response = '';
   var contentTemp = [];
@@ -19,7 +20,7 @@
   }
 
   function fetchCollection(collectionName = '', sourceURL = '') {
-    
+
     showRefreshAnimation(true);
     jQuery.ajax({
       url: gutenbergTainacanBlocks.ajaxurl,
@@ -71,9 +72,6 @@
     var caption = collection[0].post_title;
 
     return el('div', { className: 'thumbnail col-xs-3 col-xs-offset-1' },
-      //el('button', {className: 'close'}, 
-      //el('span', null, '\u00D7'),
-      //),
       el('a', { href: permalink, target: '_blank' },
         el('img', {
           src: coverImageSource,
@@ -83,6 +81,13 @@
         }),
         el('figcaption', { className: 'figure-caption text-center text-muted' }, caption)
       ),
+    );
+  }
+
+  function showControlRemoveCollections(){
+    return el('div', null, 
+      el('h3', null, 'Remove collections:'),
+      el('ul', {className: 'unstyled-list'}, null),
     );
   }
 
@@ -130,6 +135,10 @@
           props.setAttributes({ collectionName: collection, sourceURL: srcURL, content: contentTemp});
         }
       }
+
+      //el('button', {className: 'close'}, 
+      //el('span', null, '\u00D7'),
+      //),
 
       formEdit = [];
       formEdit.push(
@@ -212,6 +221,11 @@
       );
 
       return [
+        !! focus && el(
+          InspectorControls,
+          { key: 'controls' },
+          showControlRemoveCollections()
+        ),
         el('html', null,
           el('div', { className: 'container-fluid ' },
             el('div', { className: 'row' },
