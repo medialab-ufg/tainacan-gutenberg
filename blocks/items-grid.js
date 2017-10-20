@@ -111,7 +111,7 @@
                 el('dl', {},
                     el('dt',  {
                         className: '', 
-                        style: {'font-size': '85%'}
+                        style: {'font-size': '100%'}
                     }, 
                         el('a', {
                             className: 'text-muted',

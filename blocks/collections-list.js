@@ -40,6 +40,7 @@
         console.error(error);
 
         response = '';
+        showRefreshAnimation(false);        
         return;
       }
 
@@ -47,10 +48,10 @@
         alert(response.message);
 
         response = '';
+        showRefreshAnimation(false);
         return;
       }
-      showRefreshAnimation(false);
-
+      showRefreshAnimation(false);      
     }).fail(function (xhr, status, error) {
       console.error(error);
       showRefreshAnimation(false);
