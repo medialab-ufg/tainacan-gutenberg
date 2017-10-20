@@ -113,20 +113,14 @@
                         className: '', 
                         style: {'font-size': '85%'}
                     }, 
-                    el('a', {
-                        className: 'text-muted',
-                        href: item.guid, 
-                        target: '_blank'
-                    }, item.post_title),
+                        el('a', {
+                            className: 'text-muted',
+                            href: item.guid, 
+                            target: '_blank'
+                        }, item.post_title),
                     ),
                     el('dd', null, 
-                        el('details', {
-                            className: 'text-muted text-justify', 
-                            style: {'font-size': '85%'},
-                            open
-                        }, 
-                            el('small', null, item.post_content),
-                        ),
+                        el('small', null, item.post_content),
                     ),
                 ),
             ),
@@ -169,11 +163,13 @@
                 event.preventDefault();
 
                 var item;
-        
-                for(var i = 0, len = items.items.length; i < len; i++){
-                    if(items.items[i].item.post_title == event.target[2].value){
-                        item = items.items[i].item;
-                        break;
+                
+                if(items.items){
+                    for(var i = 0, len = items.items.length; i < len; i++){
+                        if(items.items[i].item.post_title == event.target[2].value){
+                            item = items.items[i].item;
+                            break;
+                        }
                     }
                 }
 
@@ -181,11 +177,16 @@
                     contentTemp = content;
                 }
 
-                showRefreshAnimation(true);
-                contentTemp.push(TainacanItem(item));
-                showRefreshAnimation(false);
+                if(item){
+                    showRefreshAnimation(true);
+                    contentTemp.push(TainacanItem(item));
+                    showRefreshAnimation(false);
 
-                props.setAttributes({ content: contentTemp, item: item });
+                    props.setAttributes({ content: contentTemp, item: item });
+                }
+                else{
+                    return;
+                }    
             }
 
             formEdit.push(
