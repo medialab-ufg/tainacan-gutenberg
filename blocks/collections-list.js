@@ -71,12 +71,12 @@
     var coverImageSource = collection[0].thumbnail ? collection[0].thumbnail : location.origin + window.userSettings.url + 'wp-content/plugins/tainacan-gutenberg/assets/images/default-cover-image.png';
     var caption = collection[0].post_title;
 
-    return el('div', { className: 'thumbnail col-xs-3 col-xs-offset-1' },
+    return el('div', { className: 'thumbnail col-xs-3', style: {'padding': 0} },
       el('a', { href: permalink, target: '_blank' },
         el('img', {
           src: coverImageSource,
           className: 'img-responsive img-thumbnail',
-          style: { width: '100%' },
+          style: { 'width': '100%', 'padding': '13px', 'border': 'none', 'background': 'none' },
           alt: caption
         }),
         el('figcaption', { className: 'figure-caption text-center text-muted' }, caption)

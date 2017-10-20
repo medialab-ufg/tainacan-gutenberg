@@ -93,7 +93,7 @@
     }
 
     function TainacanItem(item){
-        return el('div', {className: 'col-xs-5 thumbnail col-xs-offset-1'},
+        return el('div', {className: 'col-xs-12 thumbnail'},
             el('div', {className: 'col-xs-4'},
                 el('a', {
                     href: item.guid, 
@@ -102,7 +102,8 @@
                     el('img', {
                         className: 'img-thumbnail', 
                         src: item.thumbnail,
-                        alt: item.post_title
+                        alt: item.post_title,
+                        style: {'border-radius': '15px'}
                     }),
                 ),
             ),
@@ -121,7 +122,8 @@
                     el('dd', null, 
                         el('details', {
                             className: 'text-muted text-justify', 
-                            style: {'font-size': '85%'}
+                            style: {'font-size': '85%'},
+                            open
                         }, 
                             el('small', null, item.post_content),
                         ),
