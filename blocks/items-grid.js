@@ -120,7 +120,7 @@
                         }, item.post_title),
                     ),
                     el('dd', null, 
-                        el('small', null, item.post_content),
+                        el('small', {style: {'margin-top': '10px'}}, item.post_content),
                     ),
                 ),
             ),
