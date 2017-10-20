@@ -191,7 +191,7 @@
 
             formEdit.push(
                 content,
-                el('div', { className: 'thumbnail col-xs-5 col-xs-offset-1' },
+                el('div', { className: 'thumbnail col-xs-12' },
                     el('button', {
                         className: 'btn btn-default btn-sm',
                         style: { height: '140px', width: '100%' },

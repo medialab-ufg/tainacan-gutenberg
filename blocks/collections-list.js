@@ -143,7 +143,7 @@
       formEdit = [];
       formEdit.push(
         content,
-        el('div', { className: 'thumbnail col-xs-3 col-xs-offset-1' },
+        el('div', { className: 'thumbnail col-xs-3' },
           el('button', {
             className: 'btn btn-default btn-sm',
             style: { height: '140px', width: '100%' },
