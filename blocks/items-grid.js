@@ -119,8 +119,8 @@
                             target: '_blank'
                         }, item.post_title),
                     ),
-                    el('dd', null, 
-                        el('small', {style: {'margin-top': '10px'}}, item.post_content),
+                    el('dd', {style: {'margin-top': '10px'}}, 
+                        el('small', null, item.post_content),
                     ),
                 ),
             ),
