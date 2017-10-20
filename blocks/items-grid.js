@@ -93,7 +93,7 @@
     }
 
     function TainacanItem(item){
-        return el('div', {className: 'col-xs-12 thumbnail'},
+        return el('div', {className: 'col-xs-12'},
             el('div', {className: 'col-xs-4'},
                 el('a', {
                     href: item.guid, 
